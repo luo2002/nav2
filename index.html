@@ -1,11 +1,15 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <meta name="theme-color" content="#f2f2f6" media="(prefers-color-scheme: light)">
+    <meta name="theme-color" content="#000000" media="(prefers-color-scheme: dark)">
     <title>随机跳转 · 苹果风格</title>
     <style>
-        /* 全局苹果风格设计 */
+        /* ============================================
+           全局重置 & 苹果风格基础
+           ============================================ */
         * {
             margin: 0;
             padding: 0;
@@ -13,183 +17,367 @@
             -webkit-tap-highlight-color: transparent;
         }
 
+        html {
+            /* 支持 iOS 安全区域 */
+            padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
+        }
+
         body {
             min-height: 100vh;
-            background: #f2f2f6; /* 苹果系统背景灰 */
+            min-height: 100dvh; /* 动态视口高度，移动端更准确 */
             display: flex;
             align-items: center;
             justify-content: center;
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-            padding: 20px;
-            /* 确保背景是iOS风格柔光 */
-            background-image: radial-gradient(circle at 20% 30%, #ffffff 0%, #f2f2f6 100%);
+            background: #f2f2f6;
+            background-image: radial-gradient(circle at 20% 20%, #ffffff 0%, #f2f2f6 90%);
+            font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            padding: 16px;
+            color: #1c1c1e;
+            -webkit-font-smoothing: antialiased;
+            transition: background 0.3s ease, color 0.3s ease;
         }
 
-        /* 卡片容器，模拟iOS设置卡片风格 */
+        /* ============================================
+           卡片容器
+           ============================================ */
         .card {
             width: 100%;
-            max-width: 380px;
+            max-width: 420px;
             background: #ffffff;
-            border-radius: 28px;
-            box-shadow: 0 8px 28px rgba(0, 0, 0, 0.08), 0 2px 8px rgba(0, 0, 0, 0.02);
-            padding: 36px 24px 40px;
+            border-radius: 32px;
+            box-shadow:
+                0 10px 40px rgba(0, 0, 0, 0.08),
+                0 2px 8px rgba(0, 0, 0, 0.02),
+                inset 0 0 0 1px rgba(255, 255, 255, 0.6);
+            padding: 44px 28px 48px;
             display: flex;
             flex-direction: column;
             align-items: center;
-            transition: all 0.3s ease;
-            border: 1px solid rgba(255, 255, 255, 0.5);
-            backdrop-filter: blur(2px);
+            transition: all 0.3s cubic-bezier(0.25, 0.1, 0.25, 1);
+            will-change: transform;
         }
 
-        /* 装饰性图标 / 标题 */
+        /* 图标容器 — 类似 iOS 应用图标 */
         .icon-container {
-            width: 72px;
-            height: 72px;
-            background: #e8e8ed;
-            border-radius: 24px;
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(145deg, #e8e8ed, #f5f5f9);
+            border-radius: 26px;
             display: flex;
             align-items: center;
             justify-content: center;
             margin-bottom: 28px;
             color: #007aff;
-            font-size: 38px;
-            box-shadow: inset 0 0 0 1.5px rgba(0, 0, 0, 0.02);
+            font-size: 42px;
+            box-shadow:
+                0 2px 8px rgba(0, 0, 0, 0.04),
+                inset 0 0 0 1px rgba(255, 255, 255, 0.8);
+            transition: all 0.3s ease;
         }
 
+        /* 主标题 */
         h1 {
-            font-size: 24px;
-            font-weight: 600;
-            letter-spacing: -0.3px;
+            font-size: 26px;
+            font-weight: 700;
+            letter-spacing: -0.5px;
             color: #1c1c1e;
-            margin-bottom: 8px;
+            margin-bottom: 10px;
             text-align: center;
+            line-height: 1.2;
         }
 
+        /* 副标题 */
         .subhead {
-            font-size: 15px;
+            font-size: 16px;
             font-weight: 400;
             color: #8e8e93;
-            margin-bottom: 42px;
+            margin-bottom: 48px;
             text-align: center;
-            line-height: 1.4;
-            padding: 0 8px;
+            line-height: 1.5;
+            padding: 0 12px;
+            letter-spacing: -0.2px;
         }
 
-        /* 主按钮 — 苹果风格圆角按钮 */
+        /* ============================================
+           主按钮 · 苹果风格
+           ============================================ */
         .jump-button {
             width: 100%;
-            padding: 18px 24px;
+            padding: 20px 28px;
             background: #007aff;
             border: none;
-            border-radius: 18px;
+            border-radius: 20px;
             font-size: 19px;
             font-weight: 600;
             color: #ffffff;
             letter-spacing: 0.2px;
             cursor: pointer;
-            transition: all 0.2s cubic-bezier(0.25, 0.1, 0.25, 1);
-            box-shadow: 0 4px 12px rgba(0, 122, 255, 0.3);
+            transition: all 0.25s cubic-bezier(0.25, 0.1, 0.25, 1);
+            box-shadow:
+                0 6px 16px rgba(0, 122, 255, 0.32),
+                0 2px 6px rgba(0, 122, 255, 0.15);
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 8px;
+            gap: 10px;
             -webkit-user-select: none;
             user-select: none;
-            /* 增加极细内发光 */
             border: 1px solid rgba(255, 255, 255, 0.2);
-            margin-bottom: 16px;
+            position: relative;
+            overflow: hidden;
+            touch-action: manipulation;
         }
 
-        /* 按钮按下态 — 模仿 iOS 高亮 */
+        /* 按钮内发光叠加 */
+        .jump-button::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 50%;
+            background: linear-gradient(rgba(255, 255, 255, 0.18), transparent);
+            pointer-events: none;
+            border-radius: 20px 20px 0 0;
+        }
+
         .jump-button:active {
             transform: scale(0.97);
             background: #0062cc;
             box-shadow: 0 2px 8px rgba(0, 122, 255, 0.4);
         }
 
-        /* 微妙的悬停效果 (桌面端) */
-        @media (hover: hover) {
+        /* 悬停效果 — 仅桌面端 */
+        @media (hover: hover) and (pointer: fine) {
             .jump-button:hover {
                 background: #1a88ff;
-                box-shadow: 0 6px 16px rgba(0, 122, 255, 0.4);
+                box-shadow:
+                    0 8px 22px rgba(0, 122, 255, 0.42),
+                    0 2px 8px rgba(0, 122, 255, 0.2);
+                transform: translateY(-1px);
             }
         }
 
-        /* 辅助说明 */
-        .hint {
-            font-size: 13px;
-            color: #8e8e93;
-            margin-top: 12px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 6px;
-            opacity: 0.9;
-        }
-
-        .hint span {
-            background: #e8e8ed;
-            padding: 4px 10px;
-            border-radius: 30px;
-            font-weight: 500;
-            font-size: 12px;
-            color: #636366;
-        }
-
-        /* 链接预览小标签 (极简装饰) */
-        .link-preview {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
-            gap: 8px;
-            margin-top: 28px;
-            opacity: 0.6;
-        }
-
-        .link-preview .dot {
-            width: 6px;
-            height: 6px;
-            border-radius: 50%;
-            background: #007aff;
-            opacity: 0.3;
-        }
-
-        /* 确保聚焦无障碍 */
         .jump-button:focus-visible {
             outline: 3px solid rgba(0, 122, 255, 0.5);
             outline-offset: 3px;
         }
 
-        /* 深色模式适配 (跟随系统) */
+        /* 按钮禁用态（防止连点） */
+        .jump-button:disabled {
+            opacity: 0.6;
+            transform: scale(1);
+            pointer-events: none;
+            box-shadow: 0 2px 8px rgba(0, 122, 255, 0.2);
+        }
+
+        /* 按钮内的小图标 */
+        .jump-button .emoji {
+            font-size: 22px;
+            line-height: 1;
+            display: inline-block;
+            transition: transform 0.3s ease;
+        }
+
+        .jump-button:active .emoji {
+            transform: scale(1.2) rotate(10deg);
+        }
+
+        /* ============================================
+           装饰性链接点 (数量动态)
+           ============================================ */
+        .link-preview {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 8px;
+            margin-top: 36px;
+            opacity: 0.7;
+            padding: 0 20px;
+            max-width: 100%;
+        }
+
+        .link-preview .dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #007aff;
+            opacity: 0.25;
+            transition: opacity 0.3s ease, transform 0.3s ease;
+        }
+
+        .link-preview .dot:hover {
+            opacity: 0.8;
+            transform: scale(1.3);
+        }
+
+        /* ============================================
+           底部提示
+           ============================================ */
+        .hint {
+            font-size: 14px;
+            color: #8e8e93;
+            margin-top: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            opacity: 0.9;
+            letter-spacing: -0.1px;
+        }
+
+        .hint .badge {
+            background: #e8e8ed;
+            padding: 5px 12px;
+            border-radius: 30px;
+            font-weight: 500;
+            font-size: 13px;
+            color: #636366;
+            transition: background 0.3s ease, color 0.3s ease;
+        }
+
+        /* ============================================
+           响应式 · 手机端
+           ============================================ */
+        @media (max-width: 480px) {
+            body {
+                padding: 12px;
+                align-items: flex-start;
+                padding-top: max(12px, env(safe-area-inset-top));
+                padding-bottom: max(12px, env(safe-area-inset-bottom));
+            }
+            .card {
+                border-radius: 28px;
+                padding: 36px 20px 40px;
+                margin-top: 5vh;
+                margin-bottom: 5vh;
+                max-width: 100%;
+            }
+            h1 {
+                font-size: 24px;
+            }
+            .subhead {
+                font-size: 15px;
+                margin-bottom: 40px;
+            }
+            .icon-container {
+                width: 72px;
+                height: 72px;
+                font-size: 38px;
+                border-radius: 22px;
+                margin-bottom: 24px;
+            }
+            .jump-button {
+                padding: 18px 24px;
+                font-size: 18px;
+                border-radius: 18px;
+            }
+            .jump-button::after {
+                border-radius: 18px 18px 0 0;
+            }
+        }
+
+        /* 极小屏幕 */
+        @media (max-width: 360px) {
+            .card {
+                padding: 28px 16px 32px;
+            }
+            h1 {
+                font-size: 22px;
+            }
+            .jump-button {
+                font-size: 17px;
+                padding: 16px 20px;
+            }
+        }
+
+        /* ============================================
+           横屏手机
+           ============================================ */
+        @media (max-height: 500px) and (orientation: landscape) {
+            body {
+                align-items: center;
+                padding: 10px;
+            }
+            .card {
+                max-width: 500px;
+                padding: 24px 28px 28px;
+                border-radius: 24px;
+            }
+            .icon-container {
+                width: 56px;
+                height: 56px;
+                font-size: 28px;
+                border-radius: 16px;
+                margin-bottom: 16px;
+            }
+            h1 {
+                font-size: 20px;
+                margin-bottom: 6px;
+            }
+            .subhead {
+                font-size: 14px;
+                margin-bottom: 24px;
+            }
+            .jump-button {
+                padding: 14px 24px;
+                font-size: 17px;
+                border-radius: 16px;
+            }
+            .jump-button::after {
+                border-radius: 16px 16px 0 0;
+            }
+            .link-preview {
+                margin-top: 20px;
+            }
+        }
+
+        /* ============================================
+           深色模式
+           ============================================ */
         @media (prefers-color-scheme: dark) {
             body {
                 background: #000000;
-                background-image: radial-gradient(circle at 20% 30%, #1c1c1e 0%, #000000 100%);
+                background-image: radial-gradient(circle at 20% 20%, #1c1c1e 0%, #000000 90%);
+                color: #ffffff;
             }
             .card {
                 background: #1c1c1e;
-                border-color: rgba(255, 255, 255, 0.05);
-                box-shadow: 0 8px 28px rgba(0, 0, 0, 0.6);
+                box-shadow:
+                    0 10px 40px rgba(0, 0, 0, 0.6),
+                    0 2px 8px rgba(0, 0, 0, 0.3),
+                    inset 0 0 0 1px rgba(255, 255, 255, 0.06);
             }
             h1 {
                 color: #ffffff;
             }
-            .subhead, .hint {
+            .subhead {
                 color: #98989e;
             }
             .icon-container {
-                background: #2c2c2e;
+                background: linear-gradient(145deg, #2c2c2e, #3a3a3c);
                 color: #0a84ff;
-            }
-            .hint span {
-                background: #2c2c2e;
-                color: #aeaeb2;
+                box-shadow:
+                    0 2px 8px rgba(0, 0, 0, 0.3),
+                    inset 0 0 0 1px rgba(255, 255, 255, 0.08);
             }
             .jump-button {
                 background: #0a84ff;
             }
             .jump-button:active {
                 background: #0066d6;
+            }
+            @media (hover: hover) and (pointer: fine) {
+                .jump-button:hover {
+                    background: #1f8fff;
+                }
+            }
+            .hint {
+                color: #98989e;
+            }
+            .hint .badge {
+                background: #2c2c2e;
+                color: #aeaeb2;
             }
             .link-preview .dot {
                 background: #0a84ff;
@@ -198,80 +386,156 @@
     </style>
 </head>
 <body>
-    <div class="card">
-        <!-- 简约图标 (类似快捷指令/跳转图标) -->
-        <div class="icon-container">
-            <svg width="34" height="34" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style="display: block;">
+    <div class="card" role="main">
+        <!-- 应用风格图标 -->
+        <div class="icon-container" aria-hidden="true">
+            <svg width="40" height="40" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style="display: block;">
                 <path d="M5 12H19" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                 <path d="M13 6L19 12L13 18" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
             </svg>
         </div>
 
         <h1>精选文章</h1>
-        <p class="subhead">精选文章</p>
+        <!-- 副标题中的数量由 JS 动态填充 -->
+        <p class="subhead" id="subheadText">点击按钮，继续阅读</p>
 
         <!-- 主按钮 -->
-        <button class="jump-button" id="jumpBtn">
-            <span>🎲</span>阅读
+        <button class="jump-button" id="jumpBtn" aria-label="随机跳转到其中一个链接">
+            <!-- <span class="emoji" aria-hidden="true">🎲</span> -->
+            <span>前往</span>
         </button>
 
+        <!-- 装饰性点位：由 JS 动态生成，数量与链接数一致 -->
+        <div class="link-preview" id="dotContainer" aria-hidden="true"></div>
 
+        <!-- 底部提示 -->
         <div class="hint">
-            <span>@ios2026</span>
+            <span class="badge" id="countBadge">共 0 个目的地</span>
         </div>
     </div>
 
     <script>
         (function() {
-            // ---------- 10 个链接 (示例链接，可随意替换) ----------
-            // 为了演示，每个链接都指向一个知名网站或示例页，并带有标识参数
-            // 注意: 使用 'https://' 确保跳转安全，同时用 target="_blank" 新标签页打开避免丢失当前页
-            // 同时每个链接都添加了 #from-random 或 ?random 等以示区分，但不会影响跳转
-            const destinations = [
-                'https://mp.weixin.qq.com/s/HxqRRv5AyBZIkbqo7JmmSQ',                     // 1. Apple
-                'https://mp.weixin.qq.com/s/bYZYtTIk6tdk6LpSpmAoxA',                    // 2. GitHub
-                'https://mp.weixin.qq.com/s/WgZKGy5a0WPdySlL2tku-A',                 // 3. Wikipedia
-                'https://mp.weixin.qq.com/s/2S2dDrUiKsnJzID-g9dPOA',                   // 4. YouTube
-                'https://mp.weixin.qq.com/s/FdsNmI-POfafix5pUr9YDg',                    // 5. Reddit
-                'https://mp.weixin.qq.com/s/HxqRRv5AyBZIkbqo7JmmSQ',                   // 6. 纽约时报
-                'https://mp.weixin.qq.com/s/bYZYtTIk6tdk6LpSpmAoxA',                   // 7. Spotify
-                'https://mp.weixin.qq.com/s/WgZKGy5a0WPdySlL2tku-A',                     // 8. Figma
-                'https://mp.weixin.qq.com/s/2S2dDrUiKsnJzID-g9dPOA',                     // 9. Notion
-                'https://mp.weixin.qq.com/s/FdsNmI-POfafix5pUr9YDg'                     // 10. Airbnb
+            'use strict';
+
+            /* ==================================================
+               1. 配置区：在这里添加任意数量的链接 (N 个)
+                  - 想加多少个就加多少个
+                  - 点击按钮会随机跳转到其中一个
+               ================================================== */
+            const LINKS = [
+                'https://mp.weixin.qq.com/s/HxqRRv5AyBZIkbqo7JmmSQ',
+                'https://mp.weixin.qq.com/s/bYZYtTIk6tdk6LpSpmAoxA',
+                'https://mp.weixin.qq.com/s/WgZKGy5a0WPdySlL2tku-A',
+                'https://mp.weixin.qq.com/s/2S2dDrUiKsnJzID-g9dPOA',
+                'https://mp.weixin.qq.com/s/FdsNmI-POfafix5pUr9YDg',
+                //'https://www.apple.com',
+                //'https://www.github.com',
+                //'https://www.wikipedia.org',
+                //'https://www.youtube.com',
+                //'https://www.reddit.com',
+                //'https://www.nytimes.com',
+                //'https://www.spotify.com',
+                //'https://www.figma.com',
+                //'https://www.notion.so',
+                //'https://www.airbnb.com'
+                // 👆 可继续添加更多链接，例如：
+                // 'https://www.google.com',
+                // 'https://www.bing.com',
             ];
 
-            // 获取按钮元素
-            const jumpBtn = document.getElementById('jumpBtn');
+            /* ==================================================
+               2. 获取 DOM 元素
+               ================================================== */
+            const jumpBtn      = document.getElementById('jumpBtn');
+            const dotContainer = document.getElementById('dotContainer');
+            const countBadge   = document.getElementById('countBadge');
+            const subheadText  = document.getElementById('subheadText');
 
-            // 随机选择并跳转
-            function jumpToRandomLink() {
-                // 生成 0 到 9 的随机整数 (包含0和9)
-                const randomIndex = Math.floor(Math.random() * destinations.length);
-                const targetUrl = destinations[randomIndex];
+            /* ==================================================
+               3. 根据 LINKS 数量动态更新界面
+               ================================================== */
+            const total = LINKS.length;
 
-                // (可选) 为了更好的用户体验，可以在控制台输出当前跳转的链接，方便调试
-                console.log(`🎯 随机跳转到 [${randomIndex + 1}]: ${targetUrl}`);
+            // 更新副标题：显示具体数量
+            // if (total > 0) {
+            //     subheadText.innerHTML = `点击按钮，随机跳转到<br>${total} 个链接中的其中一个`;
+            // } else {
+            //     subheadText.innerHTML = '暂时没有可用的链接';
+            // }
 
-                // 使用 window.open 在新标签页打开，避免当前页被覆盖 (用户可继续点击按钮)
-                // 如果不希望新标签页，可改为 window.location.href = targetUrl; 
-                // 但为了符合"跳转"且单页面可再次操作，这里采用新标签页方式。
-                // 苹果风格通常保持当前页不丢失，所以用 _blank 更友好。
-                window.open(targetUrl, '_blank', 'noopener,noreferrer');
+            // 更新底部徽章
+            countBadge.textContent = `共 ${total} 个目的地`;
+
+            // 动态生成对应数量的装饰点（最多显示 20 个，避免过多溢出）
+            const maxDots = Math.min(total, 20);
+            for (let i = 0; i < maxDots; i++) {
+                const dot = document.createElement('span');
+                dot.className = 'dot';
+                // 给每个点一点随机延迟/透明度变化，增加灵动感
+                dot.style.opacity = (0.2 + Math.random() * 0.4).toFixed(2);
+                dotContainer.appendChild(dot);
             }
 
-            // 为按钮添加点击事件监听
+            /* ==================================================
+               4. 核心跳转逻辑
+               ================================================== */
+            let isJumping = false; // 防止重复点击
+
+            function jumpToRandomLink() {
+                // 没有链接时不执行
+                if (total === 0) {
+                    alert('还没有配置任何链接哦～');
+                    return;
+                }
+
+                // 防止连点
+                if (isJumping) return;
+                isJumping = true;
+
+                // 按钮进入过渡状态（视觉反馈）
+                jumpBtn.disabled = true;
+                jumpBtn.style.opacity = '0.7';
+
+                // 随机索引 0 ~ total-1
+                const randomIndex = Math.floor(Math.random() * total);
+                const targetUrl = LINKS[randomIndex];
+
+                // 调试日志（可在控制台查看）
+                console.log(`🎲 随机跳转到 [${randomIndex + 1}/${total}] → ${targetUrl}`);
+
+                // 小延迟后再跳转，让按钮按下的视觉反馈先呈现出来
+                setTimeout(() => {
+                    // 当前页面跳转（单页面流程更自然）
+                    window.location.href = targetUrl;
+
+                    // 如果希望在新标签页打开，改用下面这行（并注释上面那行）
+                    // window.open(targetUrl, '_blank', 'noopener,noreferrer');
+                }, 180);
+            }
+
+            /* ==================================================
+               5. 事件绑定 & 状态恢复
+               ================================================== */
             jumpBtn.addEventListener('click', jumpToRandomLink);
 
-            // 额外: 添加键盘支持 (按钮默认支持回车/空格, 但确保无障碍)
-            jumpBtn.addEventListener('keydown', (e) => {
+            // 键盘无障碍支持：Enter / Space
+            jumpBtn.addEventListener('keydown', function(e) {
                 if (e.key === 'Enter' || e.key === ' ') {
-                    e.preventDefault();  // 防止空格滚动页面
+                    e.preventDefault();
                     jumpToRandomLink();
                 }
             });
 
-            // 允许在控制台快速查看链接列表 (可选)
-            // window.destinations = destinations;  // 如需调试可取消注释
+            // 若浏览器从缓存中返回本页（如用户按了后退），重置按钮状态
+            window.addEventListener('pageshow', function(event) {
+                if (event.persisted) {
+                    // 页面从往返缓存恢复
+                    isJumping = false;
+                    jumpBtn.disabled = false;
+                    jumpBtn.style.opacity = '1';
+                }
+            });
 
         })();
     </script>
